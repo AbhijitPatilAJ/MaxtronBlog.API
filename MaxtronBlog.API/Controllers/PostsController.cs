@@ -31,5 +31,29 @@ namespace MaxtronBlog.API.Controllers
             var response = await postsRepo.GetAllPost();
             return Ok(response);
         }
+
+        [HttpGet]
+        [Route("GetPostById/{Id:guid}")]
+        public async Task<IActionResult> GetPostById([FromRoute] Guid Id)
+        {
+            var existingPost = await postsRepo.GetPostById(Id);
+            return Ok(existingPost);
+        }
+
+        [HttpPut]
+        [Route("UpdatePost")]
+        public async Task<IActionResult> UpdatePost([FromBody] AddPostDto postDetails)
+        {
+            var response = await postsRepo.UpdatePost(postDetails);
+            return Ok(response);
+        }
+
+        [HttpDelete]
+        [Route("DeletePostById/{Id:guid}")]
+        public async Task<IActionResult> DeletePostById([FromRoute] Guid Id)
+        {
+            var response = await postsRepo.DeletePostById(Id);
+            return Ok(response);
+        }
     }
 }

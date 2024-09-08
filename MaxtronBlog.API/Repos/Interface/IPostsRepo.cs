@@ -7,5 +7,8 @@ namespace MaxtronBlog.API.Repos.Interface
     {
         Task<bool> AddPost(AddPostDto postDetails);
         Task<IEnumerable<ViewPostsDTO>> GetAllPost();
+        Task<ViewPostsDTO> GetPostById(Guid id);
+        Task<bool> UpdatePost(AddPostDto postDetails);
+        Task<bool> DeletePostById(Guid id);
     }
 }
