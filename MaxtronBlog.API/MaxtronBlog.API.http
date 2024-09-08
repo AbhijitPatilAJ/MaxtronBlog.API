@@ -1,0 +1,6 @@
+@MaxtronBlog.API_HostAddress = http://localhost:5103
+
+GET {{MaxtronBlog.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
