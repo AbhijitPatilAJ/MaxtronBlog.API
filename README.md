@@ -2,4 +2,5 @@
 
 API Swagger Preview
 
-![image](https://github.com/user-attachments/assets/4f7c9a4f-2e91-4833-a087-3c6ffb3bb1f9)
+![image](https://github.com/user-attachments/assets/4002d56d-fa9b-4c5c-8cd2-2c53499261a2)
+
