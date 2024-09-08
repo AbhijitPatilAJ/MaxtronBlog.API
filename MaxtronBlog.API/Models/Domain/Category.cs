@@ -7,5 +7,6 @@
         public string UrlHandle { get; set; }
         public DateTime DateCreated() { return DateTime.Now; }
         public DateTime DateModified() { return DateTime.Now; }
+        public ICollection<BlogPost> BlogPosts { get; set; }
     }
 }

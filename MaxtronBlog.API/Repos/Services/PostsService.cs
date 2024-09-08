@@ -10,10 +10,12 @@ namespace MaxtronBlog.API.Repos.Services
     public class PostsService: IPostsRepo
     {
         private readonly ApplicationDbContext DbContext;
+        private readonly ICategoryRepo _category;
 
-        public PostsService(ApplicationDbContext dbContext)
+        public PostsService(ApplicationDbContext dbContext, ICategoryRepo category)
         {
            DbContext = dbContext;
+           _category = category;
         }
 
         public async Task<bool> AddPost( AddPostDto postDetails)
@@ -28,7 +30,16 @@ namespace MaxtronBlog.API.Repos.Services
                 IsVisible = postDetails.IsVisible,
                 Title = postDetails?.Title,
                 UrlHandle = postDetails?.UrlHandle,
+                Categories = new List<Category>()
             };
+            foreach(var cat in postDetails.Categories)
+            {
+                var existingCat = await _category.GetCategoryById(cat);
+                if (existingCat != null)
+                {
+                    Post.Categories.Add(existingCat);
+                }
+            }
             await DbContext.BlogPosts.AddAsync(Post);
             await DbContext.SaveChangesAsync();
             return true;
@@ -36,7 +47,7 @@ namespace MaxtronBlog.API.Repos.Services
 
         public async Task<IEnumerable<ViewPostsDTO>> GetAllPost()
         {
-            var posts = await DbContext.BlogPosts.ToListAsync();
+            var posts = await DbContext.BlogPosts.Include(x=>x.Categories).ToListAsync();
             var viewPost = new List<ViewPostsDTO>();
             posts.ForEach(post =>
             {
@@ -47,12 +58,18 @@ namespace MaxtronBlog.API.Repos.Services
                         UrlHandle = post.UrlHandle,
                         Content = post.Content,
                         Author = post.Author,
-                        FeaturedImageUrl= post.FeaturedImageUrl,
+                        FeaturedImageUrl = post.FeaturedImageUrl,
                         Id = post.Id,
-                        IsVisible= post.IsVisible,
-                        PublishedDate= post.PublishedDate,
-                        ShortDescription = post.ShortDescription
-                    });
+                        IsVisible = post.IsVisible,
+                        PublishedDate = post.PublishedDate,
+                        ShortDescription = post.ShortDescription,
+                        Categories = post.Categories != null ? post.Categories.Select(x => new CategoryDto
+                        {
+                            Id = x.Id,
+                            Name = x.Name,
+                            UrlHandle = x.UrlHandle,
+                        }).ToList() : [],
+                    }) ;
             });
             return viewPost.ToList();
         }
